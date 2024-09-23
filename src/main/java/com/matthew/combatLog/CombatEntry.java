@@ -11,9 +11,8 @@ public class CombatEntry {
     private boolean isInCombat;
 
     //Constructor
-    public CombatEntry(UUID playerUUID, UUID combatantUUID, long startTime, int duration) {
+    public CombatEntry(UUID playerUUID, long startTime, int duration) {
         this.playerUUID = playerUUID;
-        this.combatantUUID = combatantUUID;
         this.combatStartTime = startTime;
         this.lastHitTime = 0;
         this.combatDuration = duration;
@@ -26,14 +25,13 @@ public class CombatEntry {
         this.lastHitTime = currentTime;
     }
 
-    public boolean isCombatActive(long currentTime) {
-        return (currentTime - lastHitTime) <= combatDuration * 1000;
-    }
-
     // Getter for isInCombat
     public boolean getIsInCombat() {
         return isInCombat;
     }
 
+    public void notInCombat() {
+        isInCombat = false;
+    }
 
 }
