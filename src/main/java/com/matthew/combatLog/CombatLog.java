@@ -8,9 +8,16 @@ public final class CombatLog extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        boolean debug = true;
+
         // Plugin startup logic
         System.out.println("Combat Log Enabled");
-        Bukkit.getPluginManager().registerEvents(new Events(), this);
+        Bukkit.getPluginManager().registerEvents(new combatEvents(), this);
+
+//        if (debug) {
+//            Bukkit.getPluginManager().registerEvents(new debugEvents(), this);
+//        }
+
 
     }
 

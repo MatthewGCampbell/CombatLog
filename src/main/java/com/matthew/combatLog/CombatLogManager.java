@@ -1,13 +1,12 @@
 package com.matthew.combatLog;
 
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 //import org.bukkit.Bukkit;
 //import org.bukkit.World;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class CombatLogManager {
@@ -16,11 +15,10 @@ public class CombatLogManager {
 //
 //    long worldTime = world.getTime();
 
-    // New cooldown object
-    private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+    // Reference the plugin instance
 
-    // HashMap
-    private HashMap<UUID, CombatEntry> combatLog = new HashMap<>();
+    // New cooldown object
+    private Cache<Player, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
 
     /**
      * Starts combat for a player
@@ -29,50 +27,44 @@ public class CombatLogManager {
      */
     public void startCombat(Player player) {
         long currentTime = System.currentTimeMillis();  // Use system time in milliseconds
-        CombatEntry combatEntry = new CombatEntry(player.getUniqueId(), currentTime, 0); // New combat entry object
-        if (cooldown.asMap().containsKey(player.getUniqueId()) && combatLog.containsKey(player.getUniqueId())) { // 5 Minute Cooldown
+        CombatEntry combatEntry = new CombatEntry(player, currentTime); // New combat entry object
+
+        if (cooldown.asMap().containsKey(player)) { // 5 Minute Cooldown
             // Debug info
-            player.sendMessage("You're already on the list");
+            player.sendMessage(ChatColor.GOLD + "You've already been in combat");
+            cooldown.put(player, currentTime);
         }
+
         else {
-            // Adds the combat to the HashMap
-            combatLog.put(player.getUniqueId(), combatEntry);
             // Debug info
-            player.sendMessage("Combat has started");
-            // Adds them to the cooldown so that there is a 5 Minute cooldown
-            cooldown.put(player.getUniqueId(), currentTime);
+            player.sendMessage(ChatColor.GOLD + "Combat has started");
+            // Adds them to the cooldown so that there is a 5-Minute cooldown
+            cooldown.put(player, currentTime);
         }
     }
-
     /**
      * Checks to see if the player is in active combat
      *
      * @param player the player to check and see if they are in combat
      */
     public boolean isInCombat(Player player) {
-        UUID playerUUID = player.getUniqueId();
-
-        // First, check if the player's UUID is in the combatLog map
-        if (combatLog.containsKey(playerUUID)) {
-            return true;
-        }
 
         // Then, check if the player's UUID is in the cooldown map
-        if (cooldown.asMap().containsKey(playerUUID)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return cooldown.asMap().containsKey(player);
     }
 
     /**
-     * Removes the player from the combat list and ends the cooldown
+     * Remove player from the cooldown
      *
-     * @param player the player to end combat for
+     * @param player the player to check and see if they are in combat
      */
     public void endCombat(Player player) {
-        combatLog.remove(player.getUniqueId());
-        cooldown.invalidate(player.getUniqueId());
+        // Remove from cooldown
+        cooldown.invalidate(player);
+    }
+
+
+    public Cache<Player, Long> getCooldown() {
+        return cooldown;
     }
 }

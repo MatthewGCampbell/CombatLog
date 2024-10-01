@@ -1,4 +1,5 @@
-/Users/matthewcampbell/IdeaProjects/CombatLog/src/main/java/com/matthew/combatLog/CombatEntry.java
-/Users/matthewcampbell/IdeaProjects/CombatLog/src/main/java/com/matthew/combatLog/CombatLog.java
-/Users/matthewcampbell/IdeaProjects/CombatLog/src/main/java/com/matthew/combatLog/CombatLogManager.java
-/Users/matthewcampbell/IdeaProjects/CombatLog/src/main/java/com/matthew/combatLog/Events.java
+/Users/matthewcampbell/Documents/CombatLog/src/main/java/com/matthew/combatLog/CombatEntry.java
+/Users/matthewcampbell/Documents/CombatLog/src/main/java/com/matthew/combatLog/CombatLog.java
+/Users/matthewcampbell/Documents/CombatLog/src/main/java/com/matthew/combatLog/CombatLogManager.java
+/Users/matthewcampbell/Documents/CombatLog/src/main/java/com/matthew/combatLog/combatEvents.java
+/Users/matthewcampbell/Documents/CombatLog/src/main/java/com/matthew/combatLog/debugEvents.java
