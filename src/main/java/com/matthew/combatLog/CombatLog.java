@@ -6,23 +6,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CombatLog extends JavaPlugin implements Listener {
 
+    private static CombatLog instance;
+
     @Override
     public void onEnable() {
-        boolean debug = true;
+        instance = this;
+        CombatLogManager combatLogManager = CombatLogManager.INSTANCE;
 
-        // Plugin startup logic
         System.out.println("Combat Log Enabled");
         Bukkit.getPluginManager().registerEvents(new combatEvents(), this);
-
-//        if (debug) {
-//            Bukkit.getPluginManager().registerEvents(new debugEvents(), this);
-//        }
-
-
     }
 
-//    @Override
-//    public void onDisable() {
-//        // Plugin shutdown logic
-//    }
+    public static CombatLog getInstance() { return instance; }
 }
