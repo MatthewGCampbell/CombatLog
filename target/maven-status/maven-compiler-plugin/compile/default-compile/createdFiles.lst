@@ -1,5 +1,3 @@
 com/matthew/combatLog/combatEvents.class
 com/matthew/combatLog/CombatLogManager.class
-com/matthew/combatLog/CombatEntry.class
-com/matthew/combatLog/debugEvents.class
 com/matthew/combatLog/CombatLog.class

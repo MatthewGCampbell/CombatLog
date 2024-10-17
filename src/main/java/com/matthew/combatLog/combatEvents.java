@@ -5,51 +5,33 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
-
 
 public class combatEvents implements Listener {
 
-    CombatLogManager manager = new CombatLogManager();
+    private CombatLogManager combatLogManager = CombatLogManager.INSTANCE;
 
-    // Damage Event
+    /**
+     * Player takes damage, add damager and receiver to log
+     * @param e EntityDamageByEntityEvent
+     */
     @EventHandler
     public void onDamageEvent(EntityDamageByEntityEvent e) {
-//        if(e.getEntity() instanceof Player && !(e.getDamager() instanceof Player)) {
-//            Player enity = (Player) e.getEntity();
-//            Entity damager = (Entity) e.getDamager();
-//            enity.getPlayer().sendMessage(ChatColor.GOLD + "You haven't been combat logged as you were attacked by a " + damager.getName());
-//        }
-//        if(e.getDamager() instanceof Player && !(e.getEntity() instanceof Player)) {
-//            Player damager = (Player) e.getDamager();
-//            Entity enity = (Entity) e.getEntity();
-//            damager.getPlayer().sendMessage(ChatColor.GOLD + "You haven't been combat logged as you attacked a " + enity.getName());
-//        }
-        if (e.getEntity() instanceof Player entity && e.getDamager() instanceof Player damager) {
-            // entity.sendMessage(ChatColor.RED + "You have been combat logged as you were attacked by " + damager.getName());
-            // damager.sendMessage(ChatColor.RED + "You have been combat logged as you attacked " + entity.getName());
-
-            manager.startCombat(damager);
-            manager.startCombat(entity);
+        if (e.getEntity() instanceof Player receiver && e.getDamager() instanceof Player damager) {
+            combatLogManager.startCombat(damager);
+            combatLogManager.startCombat(receiver);
         }
     }
 
-//    @EventHandler
-//    public void onJoin(PlayerJoinEvent e) {
-//        Player p = e.getPlayer();
-//        if(combatLogManager.isInCombat(p)) {
-//            p.sendMessage("You've been in combat!!! and unfortunately you need to die!!");
-//            combatLogManager.endCombat(p);
-//            p.setHealth(0.0);
-//        }
-//    }
-
+    /**
+     * If player quits during combat log, kill the player
+     * @param e PlayerQuitEvent
+     */
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        if(manager.isInCombat(p)) {
-            manager.endCombat(p);
-            p.setHealth(0.0);
+        Player player = e.getPlayer();
+        if(combatLogManager.isInCombat(player)) {
+            combatLogManager.endCombat(player);
+            player.setHealth(0.0);
         }
     }
 }
