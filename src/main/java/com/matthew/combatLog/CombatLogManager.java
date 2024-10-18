@@ -20,15 +20,25 @@ public enum CombatLogManager {
      * @param player the player to start combat for
      */
     public void startCombat(Player player) {
-        if (!cooldown.asMap().containsKey(player)) { // 5 Minute Cooldown
+        // ONLY RUNS INITIALLY
+        BukkitTask task;
+        if (!cooldown.asMap().containsKey(player)) {
+            // Initial Combat since you aren't on the cooldown
             player.sendMessage(ChatColor.RED + "You are now in combat.");
-            cooldown.put(player, System.currentTimeMillis() + (15 * 20));
+            task = Bukkit.getScheduler().runTaskLater(CombatLog.getInstance(), () -> {
+                player.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
+            }, 15 * 20);
+            cooldownIndicator.put(player, task);
         }
-
-        BukkitTask task = Bukkit.getScheduler().runTaskLater(CombatLog.getInstance(), () -> {
-            player.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
-        }, 15 * 20);
-        cooldownIndicator.put(player, task);
+        else {
+            task = cooldownIndicator.get(player);
+            task.cancel();
+            task = Bukkit.getScheduler().runTaskLater(CombatLog.getInstance(), () -> {
+                player.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
+            }, 15 * 20);
+            cooldownIndicator.put(player, task);
+        }
+        cooldown.put(player, System.currentTimeMillis() + (15 * 20));
     }
     /**
      * Checks to see if the player is in active combat
